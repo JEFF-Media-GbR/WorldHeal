@@ -8,16 +8,16 @@ import com.jeff_media.worldheal.data.SimpleLoc;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.*;
+import org.bukkit.inventory.EntityEquipment;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -57,32 +57,54 @@ public class ExplosionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onExplode(EntityDamageByEntityEvent event) {
-        if(!isGoingToDie(event)) {
-            System.out.println("not going to die");
+
+    }
+
+    @EventHandler
+    public void onDeath(EntityDamageEvent damageEvent) {
+        System.out.println("DeathEvent: " + damageEvent.getEntityType());
+//        EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+//        if(damageEvent == null || !isValidDamageCause(damageEvent.getCause())) {
+//            System.out.println("no valid cause");
+//            return;
+//        }
+        SimpleLoc damagerLoc = null;
+        if(damageEvent instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) damageEvent;
+            damagerLoc = new SimpleLoc(entityDamageByEntityEvent.getDamager().getLocation());
+        } else if(damageEvent instanceof EntityDamageByBlockEvent) {
+            EntityDamageByBlockEvent entityDamageByBlockEvent = (EntityDamageByBlockEvent) damageEvent;
+            Block damagerBlock = entityDamageByBlockEvent.getDamager();
+            if(damagerBlock != null) {
+                damagerLoc = new SimpleLoc(entityDamageByBlockEvent.getDamager().getLocation());
+            }
+        }
+        if(damagerLoc == null) {
             return;
         }
-        if(!isRestorableEntity(event.getEntityType())) {
+        handleExplodeEntity(damageEvent.getEntity(), damagerLoc);
+    }
+
+    private void handleExplodeEntity(Entity entity, SimpleLoc origin) {
+        if(!isRestorableEntity(entity.getType())) {
             System.out.println("no proper entity type");
             return;
         }
-        if(!isValidDamageCause(event.getCause())) {
-            System.out.println("no valid cause");
-            return;
+        plugin.getExplosionManager().register(entity, origin);
+        stripEntity(entity);
+        entity.remove();
+    }
+
+    private void stripEntity(Entity entity) {
+        if(entity instanceof ItemFrame) {
+            ItemFrame itemFrame = (ItemFrame) entity;
+            itemFrame.setItem(null);
         }
-        SimpleLoc deathLoc = new SimpleLoc(event.getEntity().getLocation());
-        /*ExplosionData data = plugin.getExplosionManager().getExplosions()
-                .stream()
-                .filter(d -> d.getLocation().getWorld().equals(event.getEntity().getWorld().getUID()))
-                .min(Comparator.comparingDouble(o -> o.getLocation().distanceSquared(deathLoc)))
-                .orElse(null);*/
-        ExplosionData data = plugin.getExplosionManager().getEntityExplosions().computeIfAbsent(event.getDamager().getLocation(), __ -> new ExplosionData(null, , ));
-        if(data == null || data.getLocation().distanceSquared(deathLoc) > 400) {
-            System.out.println("data = null or distanceSquared > 400");
-            return;
+        if(entity instanceof LivingEntity) {
+            LivingEntity livingEntity = (LivingEntity) entity;
+            EntityEquipment equipment = livingEntity.getEquipment();
+            if(equipment != null) equipment.clear();
         }
-        SerializedEntity serializedEntity = JeffLib.getNMSHandler().serialize(event.getEntity());
-        event.getEntity().remove();
-        data.getEntities().add(serializedEntity);
     }
 
     private boolean isValidDamageCause(EntityDamageEvent.DamageCause cause) {

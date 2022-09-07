@@ -4,10 +4,12 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.google.gson.FieldAttributes;
 import com.jeff_media.jefflib.CommandUtils;
+import com.jeff_media.jefflib.TimeUtils;
 import com.jeff_media.worldheal.WorldHealPlugin;
 import org.bukkit.command.CommandSender;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 @CommandAlias("worldheal")
 @CommandPermission("worldheal.admin")
@@ -33,5 +35,14 @@ public class WorldHealCommand extends BaseCommand {
         }
         WorldHealPlugin.getInstance().reloadEverything();
         sender.sendMessage("Reset WorldHeal configuration.");
+    }
+
+    @Subcommand("restore-all")
+    public void restoreAll(CommandSender sender) {
+        TimeUtils.startTimings("restoreall");
+        WorldHealPlugin.getInstance().getExplosionManager().restoreEverythingNow();
+        long nanoSeconds = TimeUtils.endTimings("restoreall", false);
+        long milliSeconds = TimeUnit.MILLISECONDS.convert(nanoSeconds, TimeUnit.NANOSECONDS);
+        sender.sendMessage("Restored all leftover explosions in " + milliSeconds + " ms.");
     }
 }

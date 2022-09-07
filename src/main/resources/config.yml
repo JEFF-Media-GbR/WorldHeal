@@ -34,7 +34,6 @@ restorable-entity-types:
   - PAINTING
   - ARMOR_STAND
 
-# Not implemented yet
-disabled-explosions:
-# - "CREEPER"
+ignored-block-types:
+  - TNT
 

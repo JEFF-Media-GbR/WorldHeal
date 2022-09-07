@@ -12,7 +12,7 @@ public class RestoreTask implements Runnable {
     @Override
     public void run() {
         ExplosionManager manager = plugin.getExplosionManager();
-        Iterator<ExplosionData> iterator = manager.getExplosions().iterator();
+        Iterator<ExplosionData> iterator = manager.getOldExplosions().iterator();
         while(iterator.hasNext()) {
             ExplosionData data = iterator.next();
             if(data.isReadyToRestore()) {

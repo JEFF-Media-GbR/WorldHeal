@@ -43,6 +43,11 @@ public class SimpleLoc implements ConfigurationSerializable {
         return Math.pow(x - other.x, 2) + Math.pow(y - other.y, 2) + Math.pow(z - other.z, 2);
     }
 
+    @Override
+    public String toString() {
+        return "SimpleLoc{" + "world=" + world + ", x=" + x + ", y=" + y + ", z=" + z + '}';
+    }
+
     public SimpleLoc(Block block) {
         this.x = block.getX();
         this.y = block.getY();
