@@ -30,6 +30,11 @@ public class WorldHealPlugin extends JavaPlugin {
         acf.registerCommand(new WorldHealCommand());
     }
 
+    @Override
+    public void onDisable() {
+        getExplosionManager().restoreEverythingNow();
+    }
+
     public void reloadEverything() {
         getServer().getScheduler().cancelTasks(this);
         HandlerList.unregisterAll(this);
