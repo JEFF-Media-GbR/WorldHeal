@@ -1,0 +1,40 @@
+# Delay in milliseconds before explosions start to get restored
+delay: 5000
+
+# The amount of blocks that are restored in each go
+restore-at-once: 1
+# The delay in ticks between each restoration
+restore-every-tick: 10
+# If you set "restore-at-once" to one and "restore-every-tick" to one, then one block gets restored per tick.
+# If you set "restore-at-once" to 5 and "restore-every-tick" to five, then five blocks get restored every 10 ticks.
+
+# When true, players cannot build in the radius of the explosion
+# When false, players can build but their placed blocks will break naturally once this block gets restored
+prevent-building: false
+
+# When true, inventories (of chests, etc.) will be restored
+# When false, inventories will simply drop, and only the empty chest etc. will be restored
+restore-inventories: true
+
+# In what order should blocks be restored?
+# Available options:
+# random - restores blocks in a random order
+# bottom-first - restores blocks from the bottom up
+# center-first - restores blocks from the center outwards
+# outside-first - restores blocks from the outside inwards
+restore-order: random
+
+# When true, keeps chunks loaded until the explosion is fully restored.
+# Setting this to false might lead to lags.
+keep-chunks-loaded: true
+
+# Entities to restore instead of killing them
+restorable-entity-types:
+  - ITEM_FRAME
+  - PAINTING
+  - ARMOR_STAND
+
+# Not implemented yet
+disabled-explosions:
+# - "CREEPER"
+

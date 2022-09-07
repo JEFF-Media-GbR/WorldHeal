@@ -1,0 +1,4 @@
+name: WorldHeal
+main: com.jeff_media.worldheal.WorldHealPlugin
+version: ${project.version}
+api-version: "1.13"
