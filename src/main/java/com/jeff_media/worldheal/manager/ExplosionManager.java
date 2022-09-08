@@ -22,10 +22,13 @@ public class ExplosionManager {
 
     public ExplosionData get(SimpleLoc loc) {
         return explosions.computeIfAbsent(loc, __ -> {
-            System.out.println("Getting new ExplosionData for " + loc);
+            //System.out.println("Getting new ExplosionData for " + loc);
+            if(!plugin.getWorldGuardManager().isRestorationEnabled(null, loc)) {
+                return null;
+            }
             ExplosionData data = new ExplosionData(loc);
             Tasks.nextTick(() -> {
-                System.out.println("Trying to move the explosionData");
+                //System.out.println("Trying to move the explosionData");
                 explosions.remove(loc);
                 oldExplosions.add(data);
             });
@@ -34,11 +37,17 @@ public class ExplosionManager {
     }
 
     public void register(List<Block> blockList, SimpleLoc loc) {
-        get(loc).addBlocks(blockList);
+        ExplosionData data = get(loc);
+        if(data != null) {
+            data.addBlocks(blockList);
+        }
     }
 
     public void register(Entity entity, SimpleLoc loc) {
-        get(loc).addEntity(entity);
+        ExplosionData data = get(loc);
+        if(data != null) {
+            data.addEntity(entity);
+        }
     }
 
     public boolean isAlreadyRegistered(Block block) {

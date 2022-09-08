@@ -37,3 +37,10 @@ restorable-entity-types:
 ignored-block-types:
   - TNT
 
+# WorldHeal has the following WorldGuard flags available:
+# - worldheal-restore-explosions
+#
+# You can set a default value for each flag, either "allow" or "deny".
+# If WorldGuard is not installed, it will always use the defined default values.
+worldguard-flags-defaults:
+  worldheal-restore-explosions: allow

@@ -1,12 +1,15 @@
 package com.jeff_media.worldheal;
 
 import co.aikar.commands.PaperCommandManager;
+import com.jeff_media.jefflib.pluginhooks.WorldGuardUtils;
 import com.jeff_media.worldheal.command.WorldHealCommand;
 import com.jeff_media.worldheal.config.MainConfig;
 import com.jeff_media.worldheal.listener.BlockPlacePreventListener;
 import com.jeff_media.worldheal.listener.ExplosionListener;
 import com.jeff_media.worldheal.manager.ChunkManager;
 import com.jeff_media.worldheal.manager.ExplosionManager;
+import com.jeff_media.worldheal.worldguard.WorldGuardHandler;
+import com.jeff_media.worldheal.worldguard.WorldGuardManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -19,6 +22,7 @@ public class WorldHealPlugin extends JavaPlugin {
     @Getter private ExplosionManager explosionManager;
     @Getter private MainConfig config;
     @Getter private ChunkManager chunkManager;
+    @Getter private WorldGuardManager worldGuardManager;
 
     @Override
     public void onEnable() {
@@ -44,6 +48,11 @@ public class WorldHealPlugin extends JavaPlugin {
         Bukkit.getScheduler().runTaskTimer(this, new RestoreTask(), 0, getConfig().getRestoreEveryTick());
         if(getConfig().isPreventBuild()) {
             getServer().getPluginManager().registerEvents(new BlockPlacePreventListener(), this);
+        }
+        if(WorldGuardUtils.isWorldGuardInstalled()) {
+            worldGuardManager = new WorldGuardHandler();
+        } else {
+            worldGuardManager = new WorldGuardManager();
         }
     }
 

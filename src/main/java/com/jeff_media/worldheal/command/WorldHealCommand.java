@@ -24,7 +24,12 @@ public class WorldHealCommand extends BaseCommand {
     @Default
     @HelpCommand
     public void onHelp(CommandSender sender) {
-        CommandUtils.sendHelpMessage(sender, CommandUtils.HelpStyle.SAME_LINE_COMPACT, "worldheal reload","Reloads the configuration file");
+        CommandUtils.sendHelpMessage(sender, CommandUtils.HelpStyle.SAME_LINE_SPACED,
+                "worldheal help", "Shows this help message",
+                "worldheal reload","Reloads the configuration file",
+                "worldheal reset-config","Resets the configuration file but to it's defaults",
+                "worldheal restore-all","Instantly restores all explosions"
+        );
     }
 
     @Subcommand("reset-config")

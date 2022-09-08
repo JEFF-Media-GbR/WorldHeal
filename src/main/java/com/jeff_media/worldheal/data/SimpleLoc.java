@@ -87,4 +87,9 @@ public class SimpleLoc implements ConfigurationSerializable {
     public static SimpleLoc deserialize(Map<String,Object> map) {
         return new SimpleLoc(map);
     }
+
+    public Location asLocation() {
+        World world = Bukkit.getWorld(this.world);
+        return world == null ? null : new Location(world, x, y, z);
+    }
 }

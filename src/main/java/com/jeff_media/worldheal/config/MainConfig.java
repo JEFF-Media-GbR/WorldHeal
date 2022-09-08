@@ -22,9 +22,14 @@ public class MainConfig extends Config {
     @Getter private final boolean debug = getBoolean("debug");
     @Getter private final Set<EntityType> restorableEntityTypes = EnumUtils.getEnumsFromList(EntityType.class, getStringList("restorable-entity-types"));
     @Getter private final Set<Material> ignoredBlockTypes = EnumUtils.getEnumsFromList(Material.class, getStringList("ignored-block-types"));
+    @Getter private final FlagDefaults flagDefaults = new FlagDefaults();
 
     public MainConfig() {
         super("config.yml");
+    }
+
+    public class FlagDefaults {
+        @Getter private final boolean restoreExplosions = getBoolean("worldguard-flags-defaults.worldheal-restore-explosions");
     }
 
 }
